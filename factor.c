@@ -27,29 +27,33 @@ unsigned long long *factor(unsigned long long composite)
     return factors;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    int processCount = 5;
+    int processCount = 8;
     int process = 0;
+    int highestToFactor = 1000000;
 
     int x;
     pid_t pid;
-    for (x = 1; x <= processCount; x++) {
+    for (x = 1; x < processCount; x++) {
         pid = fork();
         if (pid == 0) {
             process = x;
             break;
         }
     }
-    printf("Process %d ending.\n", process);
-    return 0;
-    /*char filename[100];
-    snprintf(filename, 99, "primes%d.txt", process)
+
+    int eachProcessToFactor = highestToFactor / processCount,
+        processIntervalMin = eachProcessToFactor * process,
+        processIntervalMax = processIntervalMin + eachProcessToFactor;
+
+    char filename[100];
+    snprintf(filename, 99, "primes-%d-%d.txt", processIntervalMin, processIntervalMax);
     FILE *fp;
     fp = fopen(filename, "w");
 
     int i;
-    for (i = 0; i < 100000000; i++) {
+    for (i = processIntervalMin; i < processIntervalMax; i++) {
         fprintf(fp, "%d - ", i);
         long long *factors = factor(i);
         int x;
@@ -63,5 +67,5 @@ int main()
     }
 
     fclose(fp);
-    return 0;*/
+    return 0;
 }
